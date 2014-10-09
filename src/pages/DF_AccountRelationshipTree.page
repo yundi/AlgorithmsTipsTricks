@@ -1,0 +1,62 @@
+<apex:page showHeader="true" sidebar="true" readOnly="true" controller="DF_AccountRelationshipTree_Controller" tabStyle="Account">
+	<apex:sectionHeader title="Apex Algorithms: Tips & Tricks" />
+
+	<apex:form >
+		<apex:pageBlock title="Algorithm Performances">
+			<apex:pageBlockSection id="firstSolution" collapsible="false" columns="2">
+				<apex:commandButton action="{!executeQuerySolution1}" value="Run First Solution" reRender="firstSolution" status="solutionStatus"/>
+				<apex:pageBlockSectionItem >
+					<apex:outputLabel value="Time of First Solution" for="firstTime" />
+					<apex:outputText value="{!cpuTime} cpu ms" id="firstTime" />
+				</apex:pageBlockSectionItem>
+			</apex:pageBlockSection>
+
+			<apex:pageBlockSection id="secondSolution" collapsible="false" columns="2">
+				<apex:commandButton action="{!executeQuerySolution2}" value="Run Second Solution" reRender="secondSolution" status="solutionStatus"/>
+				<apex:pageBlockSectionItem >
+					<apex:outputLabel value="Time of Second Solution" for="secondTime" />
+					<apex:outputText value="{!cpuTime} cpu ms" id="secondTime" />
+				</apex:pageBlockSectionItem>
+			</apex:pageBlockSection>
+
+			<apex:pageBlockSection id="thirdSolution" collapsible="false" columns="2">
+				<apex:commandButton action="{!executeQuerySolution3}" value="Run Third Solution" reRender="thirdSolution" status="solutionStatus"/>
+				<apex:pageBlockSectionItem >
+					<apex:outputLabel value="Time of Third Solution" for="thirdTime" />
+					<apex:outputText value="{!cpuTime} cpu ms" id="thirdTime" />
+				</apex:pageBlockSectionItem>
+			</apex:pageBlockSection>
+
+			<apex:actionStatus id="solutionStatus">
+	        	<apex:facet name="start">
+	        		<apex:image style="height:15px;width:15px;" value="/img/loading32.gif"/>
+	        	</apex:facet>
+	        </apex:actionStatus>
+		</apex:pageBlock>
+
+		<apex:pageBlock title="SubAccounts Tree" mode="edit">
+			<apex:pageBlockButtons location="top">
+				<apex:commandButton action="{!calculateSubAccountTree}" value="Show Tree" reRender="subAccountTree" status="treeStatus"/>
+			</apex:pageBlockButtons>
+			<apex:pageBlockSection id="subAccountTree" collapsible="false" columns="1">
+				<apex:actionStatus id="treeStatus">
+		        	<apex:facet name="start">
+		        		<apex:image style="height:15px;width:15px;" value="/img/loading32.gif"/>
+		        	</apex:facet>
+	        	</apex:actionStatus>
+
+	        	<apex:repeat value="{!subContactsOfAccountId}" var="aId" rendered="{!NOT(isSubAccountEmpty)}">
+	        		{!mapAccountNames[aId]}
+	        		<apex:repeat value="{!subContactsOfAccountId[aId]}" var="iContact"> <!-- Per each Account aId, show its SubContacts -->
+	        			&nbsp;&nbsp;|<br/>
+	        			&nbsp;&nbsp;|---{!iContact.Contact__r.Name}
+	        			<apex:repeat value="{!subAccountsOfContactId[iContact.Contact__c]}" var="iAccount">
+	        			&nbsp;&nbsp;|-----|-----{!iAccount.Account__r.Name}
+	        			</apex:repeat>
+	        			&nbsp;&nbsp;|
+	        		</apex:repeat>
+	        	</apex:repeat>
+			</apex:pageBlockSection>
+		</apex:pageBlock>
+	</apex:form>
+</apex:page>
