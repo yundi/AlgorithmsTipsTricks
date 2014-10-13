@@ -34,7 +34,7 @@ public with sharing class DF_AccountWithContacts_Controller {
 		for(Contact c : listContacts){
 			if(!mapContactsPerAccount.containsKey(c.AccountId))
 				mapContactsPerAccount.put(c.AccountId, new List<Contact>());
-			if(mapContactsPerAccount.size() < MAX_CONTACTS)
+			if(mapContactsPerAccount.get(c.AccountId).size() < MAX_CONTACTS)
 				mapContactsPerAccount.get(c.AccountId).add(c);
 		}
 
